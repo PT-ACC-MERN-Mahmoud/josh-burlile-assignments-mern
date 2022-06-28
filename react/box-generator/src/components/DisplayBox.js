@@ -2,7 +2,7 @@ import React from 'react';
 
 const DisplayBox = (props) => {
 
-    const { boxArray } = (props);
+    const { boxArray } = props;
 
     return(
         <div>
@@ -18,7 +18,7 @@ const DisplayBox = (props) => {
             ))
         }
         </div>
-    )
+    );
 }
 
 export default DisplayBox;
