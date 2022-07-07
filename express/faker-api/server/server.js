@@ -10,7 +10,6 @@ const createUser = () => ({
     email: faker.internet.email(),
     phoneNumber: faker.phone.phoneNumber(),
     password: faker.internet.password(),
-    birthdate: faker.date.birthdate(),
     _id: faker.datatype.uuid(),
     });
 console.log(createUser());
@@ -48,6 +47,6 @@ app.get("/api/user/company", (req, res) => {
     res.json(responseObject);
 });
 
-app.listen(port, () =>
+const server = app.listen(port, () =>
     console.log(`Server is locked and loaded on port ${server.address().port}!`)
 );
