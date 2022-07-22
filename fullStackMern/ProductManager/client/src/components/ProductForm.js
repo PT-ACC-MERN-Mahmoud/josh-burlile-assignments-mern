@@ -1,48 +1,48 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 const ProductForm = (props) => {
     //keep track of what is being typed via useState hook
-    const {products, setProducts} = props;
-    const [title, setTitle] = useState(""); 
-    const [price, setPrice] = useState("");
-    const [description, setDescription] = useState("");
-    //handler when the form is submitted
-    const onSubmitHandler = (e) => {
-        //prevent default behavior of the submit
-        e.preventDefault();
-        //make a post request to create a new person
-        axios.post('http://localhost:8000/api/products', {
-            title,    // this is shortcut syntax for firstName: firstName,
-            price,      // this is shortcut syntax for lastName: lastName
-            description
-        })
-            .then(res=>{
-                console.log(res); // always console log to get used to tracking your data!
-                console.log(res.data);
-                setProducts([...products, res.data]); //this is new
-            })
-            .catch(err=>console.log(err))
+    const { submitHandler, buttonText, oldProduct} = props;
+    const [product, setProduct] = useState(
+        oldProduct || {
+            title: "",
+            price: "",
+            description: "",
+        },
+    );
+    const [errors, setErrors] = useState({});
+    
+    const handleChange = (e) => {
+        setProduct({...product, [e.target.name]: e.target.value})
     }
     
+    //handler when the form is submitted
+    const handleSubmit = (e) => {
+        //prevent default behavior of the submit
+        e.preventDefault();
+        submitHandler(product, setErrors);
+    }
     return (
-        <form onSubmit={onSubmitHandler}>
+            <form onSubmit={handleSubmit}>
             <p>
                 <label>Title</label><br/>
-                {/* When the user types in this input, our onChange synthetic event 
-                    runs this arrow function, setting that event's target's (input) 
-                    value (what's typed into the input) to our updated state   */}
-                <input type="text" onChange = {(e)=>setTitle(e.target.value)}/>
+                {errors.title && <span className="text-danger">{errors.title.message}</span>}
+                <input type="text" name="title" value={product.title} 
+                onChange = {handleChange}/>
             </p>
             <p>
                 <label>Price</label><br/>
-                <input type="number" onChange = {(e)=>setPrice(e.target.value)}/>
+                {errors.price && <span className="text-danger">{errors.price.message}</span>}
+                <input type="number" name="price" value={product.price}
+                onChange = {handleChange}/>
             </p>
             <p>
                 <label>Description</label><br/>
-                <input type="text" onChange = {(e)=>setDescription(e.target.value)}/>
+                {errors.description && <span className="text-danger">{errors.description.message}</span>}
+                <input type="text" name="description" value={product.description}
+                onChange = {handleChange}/>
             </p>
-            <input type="submit"/>
-        </form>
+            <button>{buttonText}</button>
+            </form>
     )
 }
 export default ProductForm;
